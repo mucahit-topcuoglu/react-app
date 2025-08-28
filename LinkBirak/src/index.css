@@ -76,6 +76,16 @@ body {
   width: 100vw;
 }
 
+.slack-link {
+  flex: '1 1 320px';
+  minWidth: 280;
+  maxWidth: 420;
+  display: 'flex';
+  justifyContent: 'center';
+  alignItems: 'stretch';
+  margin: '0 auto';
+}
+
 .container {
   width: 100vw;
   min-height: 100vh;

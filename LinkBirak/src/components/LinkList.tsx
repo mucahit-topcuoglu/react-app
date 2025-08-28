@@ -24,17 +24,8 @@ function LinkList(props: LinkListProps) {
       }}
     >
       {props.links.slice(0, 9).map((link, idx) => (
-        <div
-          key={link?.id || idx}
-          style={{
-            flex: '1 1 320px',
-            minWidth: 280,
-            maxWidth: 420,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'stretch',
-            margin: '0 auto'
-          }}
+        <div   key={link?.id || idx}
+        className='slack-link'
         >
           <LinkCard link={link} onDeleteLink={props.onDeleteLink} />
         </div>
