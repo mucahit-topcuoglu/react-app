@@ -2,27 +2,46 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-const LoginPage = () => {
-  const navigate = useNavigate();
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    navigate('/home');
-  };
-
+const RegisterPage = () => {
   return (
     <Box sx={{ minHeight: '100vh', width: '100vw', bgcolor: '#f5faff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <Box sx={{ width: 400, maxWidth: '95vw', borderRadius: 5, boxShadow: '0 8px 32px 0 rgba(25, 118, 210, 0.18), 0 2px 8px 0 rgba(66, 165, 245, 0.10)', p: { xs: 3, sm: 5 }, mx: 'auto', bgcolor: '#fff', border: 'none', transition: 'box-shadow 0.3s', '&:hover': { boxShadow: '0 12px 36px 0 rgba(25, 118, 210, 0.22), 0 4px 16px 0 rgba(66, 165, 245, 0.12)' } }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" style={{ marginRight: 8 }}><circle cx="12" cy="12" r="12" fill="#1976d2"/><path d="M8.5 12.5L11 15L16 10" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" style={{ marginRight: 8 }}><circle cx="12" cy="12" r="12" fill="#1976d2"/><path d="M8 12.5L11 15L16 10" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           <Typography variant="h5" sx={{ fontWeight: 700, color: '#1976d2', textAlign: 'center', letterSpacing: 1 }}>
-            Giriş Yap
+            Kayıt Ol
           </Typography>
         </Box>
        
-        <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <TextField
+            label="E-posta"
+            variant="outlined"
+            type="email"
+            fullWidth
+            sx={{ background: '#f5faff' }}
+            InputLabelProps={{ style: { color: '#1976d2' } }}
+            inputProps={{ style: { color: '#1976d2', fontWeight: 500 } }}
+          />
+          <TextField
+            label="İsim Soyisim"
+            variant="outlined"
+            fullWidth
+            sx={{ background: '#f5faff' }}
+            InputLabelProps={{ style: { color: '#1976d2' } }}
+            inputProps={{ style: { color: '#1976d2', fontWeight: 500 } }}
+          />
+          <TextField
+            label="Doğum Tarihi"
+            variant="outlined"
+            type="date"
+            fullWidth
+            sx={{ background: '#f5faff' }}
+            InputLabelProps={{ style: { color: '#1976d2' }, shrink: true }}
+            inputProps={{ style: { color: '#1976d2', fontWeight: 500 } }}
+          />
           <TextField
             label="Kullanıcı Adı"
             variant="outlined"
@@ -40,8 +59,16 @@ const LoginPage = () => {
             InputLabelProps={{ style: { color: '#1976d2' } }}
             inputProps={{ style: { color: '#1976d2', fontWeight: 500 } }}
           />
+          <TextField
+            label="Şifre Tekrar"
+            variant="outlined"
+            type="password"
+            fullWidth
+            sx={{ background: '#f5faff' }}
+            InputLabelProps={{ style: { color: '#1976d2' } }}
+            inputProps={{ style: { color: '#1976d2', fontWeight: 500 } }}
+          />
           <Button
-            type="submit"
             variant="contained"
             fullWidth
             size="large"
@@ -63,21 +90,20 @@ const LoginPage = () => {
               }
             }}
           >
-            Giriş Yap
+            Kayıt Ol
           </Button>
         </Box>
          <Box sx={{ mt: 2, textAlign: 'center' }}>
           <Typography variant="body2" sx={{ color: '#1976d2' }}>
-            Hesabın yok mu?{' '}
-            <Link to="/register" style={{ color: '#1976d2', fontWeight: 600, textDecoration: 'underline', cursor: 'pointer' }}>
-              Kayıt Ol
+            Zaten bir hesabın var mı?{' '}
+            <Link to="/" style={{ color: '#1976d2', fontWeight: 600, textDecoration: 'underline', cursor: 'pointer' }}>
+              Giriş Yap
             </Link>
           </Typography>
         </Box>
       </Box>
-      
     </Box>
   );
 };
 
-export default LoginPage;
+export default RegisterPage;
