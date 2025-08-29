@@ -3,8 +3,43 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { validateEmail, validatePassword } from '../utils/validation';
 
 const RegisterPage = () => {
+  const [form, setForm] = useState({
+    email: '',
+    fullName: '',
+    birthDate: '',
+    username: '',
+    password: '',
+    confirmPassword: ''
+  });
+  const [error, setError] = useState('');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!validateEmail(form.email)) {
+      setError('Geçersiz e-posta formatı.');
+      return;
+    }
+    if (!validatePassword(form.password)) {
+      setError('Şifre en az 6 karakter olmalı ve büyük harf, küçük harf, rakam ve özel karakter içermelidir.');
+      return;
+    }
+    if (form.password !== form.confirmPassword) {
+      setError('Girilen şifreler eşleşmiyor.');
+      return;
+    }
+    setError('');
+    // Başarılı kayıt: verileri konsola yaz
+    console.log('Kayıt başarılı:', form);
+  };
+
   return (
     <Box sx={{ minHeight: '100vh', width: '100vw', bgcolor: '#f5faff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <Box sx={{ width: 400, maxWidth: '95vw', borderRadius: 5, boxShadow: '0 8px 32px 0 rgba(25, 118, 210, 0.18), 0 2px 8px 0 rgba(66, 165, 245, 0.10)', p: { xs: 3, sm: 5 }, mx: 'auto', bgcolor: '#fff', border: 'none', transition: 'box-shadow 0.3s', '&:hover': { boxShadow: '0 12px 36px 0 rgba(25, 118, 210, 0.22), 0 4px 16px 0 rgba(66, 165, 245, 0.12)' } }}>
@@ -15,11 +50,14 @@ const RegisterPage = () => {
           </Typography>
         </Box>
        
-        <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <TextField
             label="E-posta"
+            name="email"
             variant="outlined"
             type="email"
+            value={form.email}
+            onChange={handleChange}
             fullWidth
             sx={{ background: '#f5faff' }}
             InputLabelProps={{ style: { color: '#1976d2' } }}
@@ -27,7 +65,10 @@ const RegisterPage = () => {
           />
           <TextField
             label="İsim Soyisim"
+            name="fullName"
             variant="outlined"
+            value={form.fullName}
+            onChange={handleChange}
             fullWidth
             sx={{ background: '#f5faff' }}
             InputLabelProps={{ style: { color: '#1976d2' } }}
@@ -35,8 +76,11 @@ const RegisterPage = () => {
           />
           <TextField
             label="Doğum Tarihi"
+            name="birthDate"
             variant="outlined"
             type="date"
+            value={form.birthDate}
+            onChange={handleChange}
             fullWidth
             sx={{ background: '#f5faff' }}
             InputLabelProps={{ style: { color: '#1976d2' }, shrink: true }}
@@ -44,7 +88,10 @@ const RegisterPage = () => {
           />
           <TextField
             label="Kullanıcı Adı"
+            name="username"
             variant="outlined"
+            value={form.username}
+            onChange={handleChange}
             fullWidth
             sx={{ background: '#f5faff' }}
             InputLabelProps={{ style: { color: '#1976d2' } }}
@@ -52,8 +99,11 @@ const RegisterPage = () => {
           />
           <TextField
             label="Şifre"
+            name="password"
             variant="outlined"
             type="password"
+            value={form.password}
+            onChange={handleChange}
             fullWidth
             sx={{ background: '#f5faff' }}
             InputLabelProps={{ style: { color: '#1976d2' } }}
@@ -61,14 +111,21 @@ const RegisterPage = () => {
           />
           <TextField
             label="Şifre Tekrar"
+            name="confirmPassword"
             variant="outlined"
             type="password"
+            value={form.confirmPassword}
+            onChange={handleChange}
             fullWidth
             sx={{ background: '#f5faff' }}
             InputLabelProps={{ style: { color: '#1976d2' } }}
             inputProps={{ style: { color: '#1976d2', fontWeight: 500 } }}
           />
+          {error && (
+            <Typography sx={{ color: 'red', fontSize: 14, mt: 1, textAlign: 'center' }}>{error}</Typography>
+          )}
           <Button
+            type="submit"
             variant="contained"
             fullWidth
             size="large"
@@ -96,14 +153,16 @@ const RegisterPage = () => {
          <Box sx={{ mt: 2, textAlign: 'center' }}>
           <Typography variant="body2" sx={{ color: '#1976d2' }}>
             Zaten bir hesabın var mı?{' '}
-            <Link to="/" style={{ color: '#1976d2', fontWeight: 600, textDecoration: 'underline', cursor: 'pointer' }}>
+            <Link to="/" style={{ color: '#1976d2', 
+                fontWeight: 600, 
+                textDecoration: 'underline', 
+                cursor: 'pointer' }}>
               Giriş Yap
             </Link>
           </Typography>
         </Box>
       </Box>
     </Box>
-  );
-};
+  )};
 
 export default RegisterPage;

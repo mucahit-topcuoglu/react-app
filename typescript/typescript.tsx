@@ -76,8 +76,7 @@ const obj1:GenericType<string>={
     name:"mücahit",
     age:25,
     maas:["yirmi","40"]
-}
-
+} 
 interface OrtakAlanlar{
     name:string,
     age:number,
