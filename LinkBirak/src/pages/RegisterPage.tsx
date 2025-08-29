@@ -36,7 +36,6 @@ const RegisterPage = () => {
       return;
     }
     setError('');
-    // Başarılı kayıt: verileri konsola yaz
     console.log('Kayıt başarılı:', form);
   };
 
