@@ -17,43 +17,112 @@ function LinkCard({ link, onDeleteLink }: LinkCardProps) {
   if (!link) {
     return null;
   }
+  
   return (
-    <Card sx={{
-      bgcolor: '#fff',
-      color: '#222',
-      borderRadius: 5,
-      boxShadow: '0 8px 32px 0 rgba(25, 118, 210, 0.18), 0 2px 8px 0 rgba(66, 165, 245, 0.10)',
-      minHeight: 80,
-      maxHeight: 260,
-    
-      minWidth: 320,
-      maxWidth: 420,
-      width: 370,
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      border: 'none',
-      transition: 'box-shadow 0.3s',
-      '&:hover': { boxShadow: '0 12px 36px 0 rgba(25, 118, 210, 0.22), 0 4px 16px 0 rgba(66, 165, 245, 0.12)' },
-      overflow: 'hidden'
-    }}>
-      <CardContent>
-        <Typography variant="h5" sx={{ fontWeight: 700, mb: 1, color: '#1976d2', letterSpacing: 0.5 }}>
-          {link.title || 'başlık'}
+    <Card 
+      className="link-card fade-in"
+      sx={{
+        background: '#ffffff',
+        borderRadius: 'var(--radius-xl)',
+        boxShadow: 'var(--shadow-md)',
+        padding: 'var(--spacing-6)',
+        border: '1px solid var(--gray-200)',
+        transition: 'all var(--transition-normal)',
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '200px',
+        '&:hover': {
+          transform: 'translateY(-2px)',
+          boxShadow: 'var(--shadow-lg)',
+        }
+      }}
+    >
+      <CardContent sx={{ padding: 0, flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <Typography 
+          variant="h5" 
+          sx={{ 
+            fontWeight: 600, 
+            mb: 2, 
+            color: 'var(--gray-900)', 
+            fontSize: 'var(--font-size-xl)',
+            lineHeight: 1.3
+          }}
+        >
+          {link.title || 'Başlık'}
         </Typography>
-        <Typography variant="body2" sx={{ color: '#444', mb: 2 }}>
-          {link.description || 'açıklama'}
+        
+        <Typography 
+          variant="body2" 
+          sx={{ 
+            color: 'var(--gray-600)', 
+            mb: 3, 
+            lineHeight: 1.6,
+            flex: 1
+          }}
+        >
+          {link.description || 'Açıklama'}
         </Typography>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 8 }}>
+        
+        <div style={{ 
+          display: 'flex', 
+          flexWrap: 'wrap', 
+          gap: 'var(--spacing-2)', 
+          marginTop: 'auto' 
+        }}>
           {link.tags
             ? link.tags.split(',').map((tag, i) => (
-                <Chip key={i} label={tag.trim()} size="small" sx={{ bgcolor: '#f5faff', color: '#1976d2', fontWeight: 500, borderRadius: 2, border: '1px solid #1976d2' }} />
+                <Chip 
+                  key={i} 
+                  label={tag.trim()} 
+                  size="small" 
+                  sx={{ 
+                    background: 'var(--accent-50)',
+                    color: 'var(--accent-700)',
+                    fontWeight: 500,
+                    borderRadius: 'var(--radius-full)',
+                    border: '1px solid var(--accent-200)',
+                    transition: 'all var(--transition-fast)',
+                    '&:hover': {
+                      background: 'var(--accent-100)',
+                      transform: 'scale(1.02)'
+                    }
+                  }} 
+                />
               ))
-            : <Chip label="etiket" size="small" sx={{ bgcolor: '#f5faff', color: '#1976d2', borderRadius: 2, border: '1px solid #1976d2' }} />}
+            : <Chip 
+                label="Etiket" 
+                size="small" 
+                sx={{ 
+                  background: 'var(--accent-50)',
+                  color: 'var(--accent-700)',
+                  borderRadius: 'var(--radius-full)',
+                  border: '1px solid var(--accent-200)'
+                }} 
+              />
+          }
         </div>
       </CardContent>
-      <CardActions sx={{ justifyContent: 'flex-end', mt: 'auto' }}>
-        <IconButton aria-label="Sil" onClick={() => onDeleteLink(link.id)} sx={{ color: '#ff5252', bgcolor: '#f5faff', borderRadius: 2, '&:hover': { bgcolor: '#ffeaea' } }}>
+      
+      <CardActions sx={{ 
+        justifyContent: 'flex-end', 
+        mt: 'auto',
+        padding: 0,
+        paddingTop: 'var(--spacing-4)'
+      }}>
+        <IconButton 
+          aria-label="Sil" 
+          onClick={() => onDeleteLink(link.id)} 
+          sx={{ 
+            color: 'var(--error-500)',
+            background: 'var(--error-50)',
+            borderRadius: 'var(--radius-lg)',
+            transition: 'all var(--transition-fast)',
+            '&:hover': { 
+              background: 'var(--error-100)',
+              transform: 'scale(1.05)'
+            }
+          }}
+        >
           <DeleteIcon />
         </IconButton>
       </CardActions>

@@ -1,5 +1,6 @@
-import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 import LinkCard from './LinkCard';
+import EmptyState from './EmptyState';
 import type { ILink } from '../interfaces';
 
 interface LinkListProps {
@@ -8,29 +9,45 @@ interface LinkListProps {
 }
 
 function LinkList(props: LinkListProps) {
+  if (props.links.length === 0) {
+    return (
+      <Box
+        sx={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: 'var(--spacing-8)'
+        }}
+      >
+        <EmptyState />
+      </Box>
+    );
+  }
+
   return (
-    <Stack
-      direction={{ xs: 'column', sm: 'row' }}
-      spacing={3}
-      useFlexGap
-      flexWrap="wrap"
+    <Box
+      className="link-list fade-in"
       sx={{
-        mt: 3,
-        mb: 3,
-        justifyContent: 'center',
-        alignItems: 'stretch',
-        rowGap: 4,
-        columnGap: 4
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+        gap: 'var(--spacing-6)',
+        width: '100%',
+        maxWidth: '1200px',
+        padding: '0 var(--spacing-4)',
+        '@media (max-width: 768px)': {
+          gridTemplateColumns: '1fr',
+          gap: 'var(--spacing-4)',
+          padding: '0 var(--spacing-3)'
+        }
       }}
     >
       {props.links.slice(0, 9).map((link, idx) => (
-        <div   key={link?.id || idx}
-        className='slack-link'
-        >
+        <Box key={link?.id || idx}>
           <LinkCard link={link} onDeleteLink={props.onDeleteLink} />
-        </div>
+        </Box>
       ))}
-    </Stack>
+    </Box>
   );
 }
 

@@ -39,28 +39,63 @@ const AddLinkForm = (props: AddLinkFormProps) => {
   }
 
   return (
-    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4, mb: 2 }}>
-      <Card sx={{
-        width: { xs: '95%', sm: 370, md: 370 },
-        maxWidth: 420,
-        minWidth: 320,
-        borderRadius: 5,
-        boxShadow: '0 8px 32px 0 rgba(25, 118, 210, 0.18), 0 2px 8px 0 rgba(66, 165, 245, 0.10)',
-        p: 1,
-        mx: 'auto',
-        bgcolor: '#fff',
-        border: 'none',
-        transition: 'box-shadow 0.3s',
-        '&:hover': { boxShadow: '0 12px 36px 0 rgba(25, 118, 210, 0.22), 0 4px 16px 0 rgba(66, 165, 245, 0.12)' }
-      }}>
-        <CardContent>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
-            <AddCircleOutlineIcon sx={{ color: '#1976d2', fontSize: 32, mr: 1 }} />
-            <Typography variant="h5" sx={{ fontWeight: 700, color: '#1976d2', textAlign: 'center', letterSpacing: 1 }}>
+    <Box sx={{ 
+      width: '100%', 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      mt: 4, 
+      mb: 2 
+    }}>
+      <Card 
+        className="add-link-form slide-up"
+        sx={{
+          width: { xs: '95%', sm: 500, md: 600 },
+          maxWidth: 600,
+          background: '#ffffff',
+          borderRadius: 'var(--radius-xl)',
+          boxShadow: 'var(--shadow-lg)',
+          border: '1px solid var(--gray-200)',
+          transition: 'all var(--transition-normal)',
+          '&:hover': {
+            boxShadow: 'var(--shadow-xl)'
+          }
+        }}
+      >
+        <CardContent sx={{ padding: 'var(--spacing-8)' }}>
+          <Box sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            mb: 4 
+          }}>
+            <AddCircleOutlineIcon sx={{ 
+              color: 'var(--accent-600)', 
+              fontSize: 32, 
+              mr: 2
+            }} />
+            <Typography 
+              variant="h4" 
+              sx={{ 
+                fontWeight: 600, 
+                color: 'var(--accent-700)',
+                textAlign: 'center',
+                letterSpacing: 0.5
+              }}
+            >
               Link Ekle
             </Typography>
           </Box>
-          <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          
+          <Box 
+            component="form" 
+            onSubmit={handleSubmit} 
+            sx={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              gap: 3 
+            }}
+          >
             <TextField
               label="URL"
               variant="outlined"
@@ -69,15 +104,34 @@ const AddLinkForm = (props: AddLinkFormProps) => {
               onChange={handleChange}
               required
               autoFocus
-              sx={{ background: '#f5faff' }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  background: '#ffffff',
+                  borderRadius: 'var(--radius-lg)',
+                  border: '1px solid var(--gray-300)',
+                  transition: 'all var(--transition-fast)',
+                  '&:hover': {
+                    borderColor: 'var(--accent-300)'
+                  },
+                  '&.Mui-focused': {
+                    borderColor: 'var(--accent-500)',
+                    boxShadow: '0 0 0 3px rgba(59, 130, 246, 0.1)'
+                  }
+                },
+                '& .MuiInputLabel-root': {
+                  color: 'var(--gray-600)',
+                  fontWeight: 500
+                }
+              }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <LinkIcon color="primary" />
+                    <LinkIcon sx={{ color: 'var(--accent-600)' }} />
                   </InputAdornment>
                 )
               }}
             />
+            
             <TextField
               label="Başlık"
               variant="outlined"
@@ -85,15 +139,34 @@ const AddLinkForm = (props: AddLinkFormProps) => {
               value={formData.title}
               onChange={handleChange}
               required
-              sx={{ background: '#f5faff' }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  background: '#ffffff',
+                  borderRadius: 'var(--radius-lg)',
+                  border: '1px solid var(--gray-300)',
+                  transition: 'all var(--transition-fast)',
+                  '&:hover': {
+                    borderColor: 'var(--accent-300)'
+                  },
+                  '&.Mui-focused': {
+                    borderColor: 'var(--accent-500)',
+                    boxShadow: '0 0 0 3px rgba(59, 130, 246, 0.1)'
+                  }
+                },
+                '& .MuiInputLabel-root': {
+                  color: 'var(--gray-600)',
+                  fontWeight: 500
+                }
+              }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <TitleIcon color="primary" />
+                    <TitleIcon sx={{ color: 'var(--accent-600)' }} />
                   </InputAdornment>
                 )
               }}
             />
+            
             <TextField
               label="Açıklama"
               variant="outlined"
@@ -101,50 +174,91 @@ const AddLinkForm = (props: AddLinkFormProps) => {
               value={formData.description}
               onChange={handleChange}
               multiline
-              minRows={2}
-              sx={{ background: '#f5faff' }}
+              minRows={3}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  background: '#ffffff',
+                  borderRadius: 'var(--radius-lg)',
+                  border: '1px solid var(--gray-300)',
+                  transition: 'all var(--transition-fast)',
+                  '&:hover': {
+                    borderColor: 'var(--accent-300)'
+                  },
+                  '&.Mui-focused': {
+                    borderColor: 'var(--accent-500)',
+                    boxShadow: '0 0 0 3px rgba(59, 130, 246, 0.1)'
+                  }
+                },
+                '& .MuiInputLabel-root': {
+                  color: 'var(--gray-600)',
+                  fontWeight: 500
+                }
+              }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <DescriptionIcon color="primary" />
+                    <DescriptionIcon sx={{ color: 'var(--accent-600)' }} />
                   </InputAdornment>
                 )
               }}
             />
+            
             <TextField
               label="Etiketler (virgülle ayırın)"
               variant="outlined"
               name="tags"
               value={formData.tags}
               onChange={handleChange}
-              sx={{ background: '#f5faff' }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  background: '#ffffff',
+                  borderRadius: 'var(--radius-lg)',
+                  border: '1px solid var(--gray-300)',
+                  transition: 'all var(--transition-fast)',
+                  '&:hover': {
+                    borderColor: 'var(--accent-300)'
+                  },
+                  '&.Mui-focused': {
+                    borderColor: 'var(--accent-500)',
+                    boxShadow: '0 0 0 3px rgba(59, 130, 246, 0.1)'
+                  }
+                },
+                '& .MuiInputLabel-root': {
+                  color: 'var(--gray-600)',
+                  fontWeight: 500
+                }
+              }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <TagIcon color="primary" />
+                    <TagIcon sx={{ color: 'var(--accent-600)' }} />
                   </InputAdornment>
                 )
               }}
             />
+            
             <Button
               type="submit"
               variant="contained"
               size="large"
               sx={{
-                borderRadius: 2,
-                fontWeight: 700,
-                fontSize: '1.08rem',
-                mt: 1,
-                bgcolor: 'linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)',
-                background: 'linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)',
+                borderRadius: 'var(--radius-lg)',
+                fontWeight: 600,
+                fontSize: 'var(--font-size-lg)',
+                mt: 2,
+                background: 'var(--accent-600)',
                 color: '#fff',
-                boxShadow: '0 2px 8px 0 rgba(66, 165, 245, 0.18)',
-                transition: 'transform 0.2s, box-shadow 0.2s',
+                boxShadow: 'var(--shadow-sm)',
+                transition: 'all var(--transition-normal)',
+                textTransform: 'none',
+                padding: 'var(--spacing-4) var(--spacing-6)',
                 '&:hover': {
-                  bgcolor: 'linear-gradient(90deg, #125ea2 0%, #1976d2 100%)',
-                  background: 'linear-gradient(90deg, #125ea2 0%, #1976d2 100%)',
-                  transform: 'scale(1.04)',
-                  boxShadow: '0 4px 16px 0 rgba(66, 165, 245, 0.22)'
+                  background: 'var(--accent-700)',
+                  transform: 'translateY(-1px)',
+                  boxShadow: 'var(--shadow-md)'
+                },
+                '&:active': {
+                  transform: 'translateY(0)'
                 }
               }}
               endIcon={<AddCircleOutlineIcon />}

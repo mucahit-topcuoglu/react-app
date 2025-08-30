@@ -1,40 +1,67 @@
-interface SearchBarProps {
-  searchTerm: string;
-  onSearchChange: (term: string) => void;
-}
+import SearchIcon from '@mui/icons-material/Search';
+import InputAdornment from '@mui/material/InputAdornment';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
 
-function SearchBar() {
+const SearchBar = () => {
   return (
-    <div
-      className="search-bar"
-      style={{
+    <Box
+      className="search-bar fade-in"
+      sx={{
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 28
+        marginBottom: 'var(--spacing-8)',
+        width: '100%',
+        maxWidth: 600,
+        mx: 'auto'
       }}
     >
-      <input
+      <TextField
         type="text"
         placeholder="Linklerde ara... (başlık veya açıklama)"
-        className="search-input"
-        style={{
-          width: 370,
-          maxWidth: '95%',
-          background: '#f5faff',
-          border: '1.5px solid #1976d2',
-          borderRadius: 8,
-          fontSize: '1.08rem',
-          padding: '0.85rem 1.1rem',
-          color: '#1976d2',
-          fontWeight: 500,
-          boxShadow: '0 2px 8px 0 rgba(66, 165, 245, 0.08)',
-          outline: 'none',
-          transition: 'border-color 0.2s, box-shadow 0.2s'
+        variant="outlined"
+        fullWidth
+        sx={{
+          '& .MuiOutlinedInput-root': {
+            background: '#ffffff',
+            borderRadius: 'var(--radius-full)',
+            border: '1px solid var(--gray-300)',
+            fontSize: 'var(--font-size-base)',
+            fontWeight: 500,
+            boxShadow: 'var(--shadow-sm)',
+            transition: 'all var(--transition-fast)',
+            '&:hover': {
+              borderColor: 'var(--accent-300)',
+              boxShadow: 'var(--shadow-md)'
+            },
+            '&.Mui-focused': {
+              borderColor: 'var(--accent-500)',
+              boxShadow: '0 0 0 3px rgba(59, 130, 246, 0.1), var(--shadow-md)'
+            }
+          },
+          '& .MuiInputLabel-root': {
+            color: 'var(--gray-600)',
+            fontWeight: 500
+          },
+          '& .MuiInputBase-input': {
+            color: 'var(--gray-800)',
+            '&::placeholder': {
+              color: 'var(--gray-500)',
+              opacity: 1
+            }
+          }
+        }}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon sx={{ color: 'var(--accent-600)' }} />
+            </InputAdornment>
+          )
         }}
       />
-    </div>
-  )
-}
+    </Box>
+  );
+};
 
-export default SearchBar
+export default SearchBar;

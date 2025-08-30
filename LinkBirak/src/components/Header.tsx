@@ -69,11 +69,18 @@ const Header = () => {
           to={item.path}
           sx={{
             fontWeight: isActive(item.path) ? 600 : 400,
-            bgcolor: isActive(item.path) ? 'rgba(255,255,255,0.1)' : 'transparent',
-            borderRadius: 2,
-            px: 2,
+            background: isActive(item.path) 
+              ? 'var(--accent-100)' 
+              : 'transparent',
+            color: isActive(item.path) ? 'var(--accent-700)' : 'var(--gray-700)',
+            borderRadius: 'var(--radius-lg)',
+            px: 3,
+            py: 1.5,
+            transition: 'all var(--transition-normal)',
             '&:hover': {
-              bgcolor: 'rgba(255,255,255,0.15)',
+              background: 'var(--accent-50)',
+              color: 'var(--accent-700)',
+              transform: 'translateY(-1px)'
             }
           }}
         >
@@ -91,15 +98,24 @@ const Header = () => {
       sx={{
         '& .MuiDrawer-paper': {
           width: 280,
-          bgcolor: '#f8f9fa',
+          background: '#ffffff',
+          border: '1px solid var(--gray-200)',
+          boxShadow: 'var(--shadow-lg)'
         }
       }}
     >
-      <Box sx={{ p: 2 }}>
-        <Typography variant="h6" sx={{ fontWeight: 600, color: '#1976d2', mb: 2 }}>
+      <Box sx={{ p: 3 }}>
+        <Typography 
+          variant="h5" 
+          sx={{ 
+            fontWeight: 700, 
+            color: 'var(--accent-700)',
+            mb: 3 
+          }}
+        >
           LinkBirak
         </Typography>
-        <Divider sx={{ mb: 2 }} />
+        <Divider sx={{ mb: 3, borderColor: 'var(--gray-200)' }} />
         <List>
           {menuItems.map((item) => (
             <ListItem
@@ -108,12 +124,16 @@ const Header = () => {
               to={item.path}
               onClick={handleMobileMenuToggle}
               sx={{
-                borderRadius: 1,
+                borderRadius: 'var(--radius-lg)',
                 mb: 1,
-                bgcolor: isActive(item.path) ? 'rgba(25, 118, 210, 0.08)' : 'transparent',
-                color: isActive(item.path) ? '#1976d2' : '#666',
+                background: isActive(item.path) 
+                  ? 'var(--accent-50)' 
+                  : 'transparent',
+                color: isActive(item.path) ? 'var(--accent-700)' : 'var(--gray-700)',
+                transition: 'all var(--transition-fast)',
                 '&:hover': {
-                  bgcolor: 'rgba(25, 118, 210, 0.04)',
+                  background: 'var(--accent-50)',
+                  transform: 'translateX(4px)'
                 }
               }}
             >
@@ -131,14 +151,23 @@ const Header = () => {
             </ListItem>
           ))}
         </List>
-        <Divider sx={{ my: 2 }} />
+        <Divider sx={{ my: 3, borderColor: 'var(--gray-200)' }} />
         <Button
           fullWidth
           variant="outlined"
           color="error"
           startIcon={<LogoutIcon />}
           onClick={handleLogout}
-          sx={{ fontWeight: 600 }}
+          sx={{ 
+            fontWeight: 600,
+            borderRadius: 'var(--radius-lg)',
+            borderColor: 'var(--error-500)',
+            color: 'var(--error-600)',
+            '&:hover': {
+              background: 'var(--error-50)',
+              borderColor: 'var(--error-600)'
+            }
+          }}
         >
           Çıkış
         </Button>
@@ -150,13 +179,18 @@ const Header = () => {
     <AppBar 
       position="fixed" 
       sx={{ 
-        bgcolor: '#1976d2',
-        background: 'linear-gradient(135deg, #1976d2 0%, #1565c0 100%)',
-        boxShadow: '0 2px 20px rgba(25, 118, 210, 0.3)',
+        background: '#ffffff',
+        borderBottom: '1px solid var(--gray-200)',
+        boxShadow: 'var(--shadow-sm)',
         zIndex: theme.zIndex.drawer + 1
       }}
     >
-      <Toolbar sx={{ justifyContent: 'space-between', px: { xs: 2, md: 3 }, position: 'relative' }}>
+      <Toolbar sx={{ 
+        justifyContent: 'space-between', 
+        px: { xs: 2, md: 3 }, 
+        position: 'relative',
+        minHeight: '70px'
+      }}>
         <Box sx={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', pointerEvents: 'none' }}>
          
         </Box>
@@ -164,9 +198,18 @@ const Header = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {isMobile && (
             <IconButton
-              color="inherit"
+              color="primary"
               onClick={handleMobileMenuToggle}
-              sx={{ mr: 2 }}
+              sx={{ 
+                mr: 2,
+                background: 'var(--accent-50)',
+                borderRadius: 'var(--radius-lg)',
+                color: 'var(--accent-700)',
+                '&:hover': {
+                  background: 'var(--accent-100)',
+                  transform: 'scale(1.05)'
+                }
+              }}
             >
               <MenuIcon />
             </IconButton>
@@ -177,12 +220,18 @@ const Header = () => {
             to="/profile"
             size="large"
             edge="start"
-            color="inherit"
+            color="primary"
             sx={{ 
               mr: 2,
-              bgcolor: isActive('/profile') ? 'rgba(255,255,255,0.2)' : 'transparent',
+              background: isActive('/profile') 
+                ? 'var(--accent-100)' 
+                : 'var(--accent-50)',
+              borderRadius: 'var(--radius-lg)',
+              color: 'var(--accent-700)',
+              transition: 'all var(--transition-fast)',
               '&:hover': {
-                bgcolor: 'rgba(255,255,255,0.15)',
+                background: 'var(--accent-100)',
+                transform: 'scale(1.05)'
               }
             }}
           >
@@ -197,16 +246,22 @@ const Header = () => {
         {/* Sağ: Çıkış (Desktop) */}
         {!isMobile && (
           <Button 
-            color="inherit" 
+            color="primary" 
             onClick={handleLogout} 
             startIcon={<LogoutIcon />}
             sx={{ 
               fontWeight: 600,
-              bgcolor: 'rgba(255,255,255,0.1)',
-              borderRadius: 2,
+              background: 'var(--error-50)',
+              borderRadius: 'var(--radius-lg)',
               px: 3,
+              py: 1.5,
+              color: 'var(--error-600)',
+              border: '1px solid var(--error-200)',
+              transition: 'all var(--transition-normal)',
               '&:hover': {
-                bgcolor: 'rgba(255,255,255,0.2)',
+                background: 'var(--error-100)',
+                transform: 'translateY(-1px)',
+                boxShadow: 'var(--shadow-md)'
               }
             }}
           >
