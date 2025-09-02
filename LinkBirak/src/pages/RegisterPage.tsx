@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import { validateEmail, validatePassword } from '../utils/validation';
 import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
+import axios from 'axios';
 
 const RegisterPage = () => {
   const [form, setForm] = useState({
@@ -17,13 +18,17 @@ const RegisterPage = () => {
     confirmPassword: ''
   });
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError('');
+    setSuccess('');
+
     if (!validateEmail(form.email)) {
       setError('Geçersiz e-posta formatı.');
       return;
@@ -36,8 +41,29 @@ const RegisterPage = () => {
       setError('Girilen şifreler eşleşmiyor.');
       return;
     }
-    setError('');
-    console.log('Kayıt başarılı:', form);
+
+    try {
+      const response = await axios.post('http://localhost:3000/users', {
+        username: form.username,
+        email: form.email,
+        password: form.password
+      });
+
+      setSuccess('Kayıt başarıyla tamamlandı!');
+      console.log('Kayıt başarılı:', response.data);
+      
+      setForm({
+        email: '',
+        fullName: '',
+        birthDate: '',
+        username: '',
+        password: '',
+        confirmPassword: ''
+      });
+    } catch (err: any) {
+      console.error('Kayıt hatası:', err);
+      setError(err.response?.data?.message || 'Kayıt sırasında bir hata oluştu.');
+    }
   };
 
   return (
@@ -325,6 +351,25 @@ const RegisterPage = () => {
                 fontWeight: 500
               }}>
                 {error}
+              </Typography>
+            </Box>
+          )}
+
+          {/* Başarı Mesajı */}
+          {success && (
+            <Box sx={{
+              p: 2,
+              borderRadius: 'var(--radius-lg)',
+              bgcolor: 'var(--success-50)',
+              border: '1px solid var(--success-200)'
+            }}>
+              <Typography sx={{ 
+                color: 'var(--success-600)', 
+                fontSize: 'var(--font-size-sm)', 
+                textAlign: 'center',
+                fontWeight: 500
+              }}>
+                {success}
               </Typography>
             </Box>
           )}

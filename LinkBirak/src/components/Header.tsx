@@ -24,6 +24,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
 import LinkIcon from '@mui/icons-material/Link';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { useUser } from '../contexts/UserContext';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -32,9 +33,10 @@ const Header = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const { user, logout } = useUser();
 
   const handleLogout = () => {
-    // Çıkış işlemleri burada yapılabilir (örn. localStorage temizleme)
+    logout();
     navigate('/');
   };
 
@@ -115,6 +117,25 @@ const Header = () => {
         >
           LinkBirak
         </Typography>
+        
+        {/* Kullanıcı Bilgileri */}
+        {user && (
+          <Box sx={{ 
+            mb: 3, 
+            p: 2, 
+            bgcolor: 'var(--accent-50)', 
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid var(--accent-200)'
+          }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'var(--accent-700)' }}>
+              {user.username}
+            </Typography>
+            <Typography variant="caption" sx={{ color: 'var(--gray-600)' }}>
+              {user.email}
+            </Typography>
+          </Box>
+        )}
+        
         <Divider sx={{ mb: 3, borderColor: 'var(--gray-200)' }} />
         <List>
           {menuItems.map((item) => (
@@ -243,30 +264,37 @@ const Header = () => {
         {/* Orta: Desktop Menü */}
         {!isMobile && <DesktopMenu />}
 
-        {/* Sağ: Çıkış (Desktop) */}
+        {/* Sağ: Kullanıcı Bilgileri ve Çıkış (Desktop) */}
         {!isMobile && (
-          <Button 
-            color="primary" 
-            onClick={handleLogout} 
-            startIcon={<LogoutIcon />}
-            sx={{ 
-              fontWeight: 600,
-              background: 'var(--error-50)',
-              borderRadius: 'var(--radius-lg)',
-              px: 3,
-              py: 1.5,
-              color: 'var(--error-600)',
-              border: '1px solid var(--error-200)',
-              transition: 'all var(--transition-normal)',
-              '&:hover': {
-                background: 'var(--error-100)',
-                transform: 'translateY(-1px)',
-                boxShadow: 'var(--shadow-md)'
-              }
-            }}
-          >
-            Çıkış
-          </Button>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            {user && (
+              <Typography variant="body2" sx={{ color: 'var(--gray-600)' }}>
+                {user.username}
+              </Typography>
+            )}
+            <Button 
+              color="primary" 
+              onClick={handleLogout} 
+              startIcon={<LogoutIcon />}
+              sx={{ 
+                fontWeight: 600,
+                background: 'var(--error-50)',
+                borderRadius: 'var(--radius-lg)',
+                px: 3,
+                py: 1.5,
+                color: 'var(--error-600)',
+                border: '1px solid var(--error-200)',
+                transition: 'all var(--transition-normal)',
+                '&:hover': {
+                  background: 'var(--error-100)',
+                  transform: 'translateY(-1px)',
+                  boxShadow: 'var(--shadow-md)'
+                }
+              }}
+            >
+              Çıkış
+            </Button>
+          </Box>
         )}
       </Toolbar>
       

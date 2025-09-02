@@ -4,13 +4,50 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useNavigate, Link } from 'react-router-dom';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useUser } from '../contexts/UserContext';
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const { login } = useUser();
+  const [form, setForm] = useState({
+    email: '',
+    password: ''
+  });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    navigate('/home');
+    setError('');
+    setLoading(true);
+
+    try {
+      const response = await axios.post('http://localhost:3000/users/login', {
+        email: form.email,
+        password: form.password
+      });
+
+      if (response.data.success) {
+        // UserContext ile kullanıcıyı giriş yap
+        login(response.data.user);
+        
+        // Ana sayfaya yönlendir
+        navigate('/home');
+      } else {
+        setError(response.data.message || 'Giriş başarısız');
+      }
+    } catch (err: any) {
+      console.error('Giriş hatası:', err);
+      setError(err.response?.data?.message || 'Giriş sırasında bir hata oluştu.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -85,8 +122,12 @@ const LoginPage = () => {
           gap: 3 
         }}>
           <TextField
-            label="Kullanıcı Adı"
+            label="E-posta"
+            name="email"
             variant="outlined"
+            type="email"
+            value={form.email}
+            onChange={handleChange}
             fullWidth
             size="medium"
             sx={{
@@ -115,8 +156,11 @@ const LoginPage = () => {
           />
           <TextField
             label="Şifre"
+            name="password"
             variant="outlined"
             type="password"
+            value={form.password}
+            onChange={handleChange}
             fullWidth
             size="medium"
             sx={{
@@ -144,6 +188,25 @@ const LoginPage = () => {
             }}
           />
           
+          {/* Hata Mesajı */}
+          {error && (
+            <Box sx={{
+              p: 2,
+              borderRadius: 'var(--radius-lg)',
+              bgcolor: 'var(--error-50)',
+              border: '1px solid var(--error-200)'
+            }}>
+              <Typography sx={{ 
+                color: 'var(--error-600)', 
+                fontSize: 'var(--font-size-sm)', 
+                textAlign: 'center',
+                fontWeight: 500
+              }}>
+                {error}
+              </Typography>
+            </Box>
+          )}
+          
           {/* Şifremi Unuttum Linki */}
           <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Link 
@@ -167,6 +230,7 @@ const LoginPage = () => {
             variant="contained"
             fullWidth
             size="large"
+            disabled={loading}
             sx={{
               borderRadius: 'var(--radius-lg)',
               fontWeight: 600,
@@ -180,10 +244,14 @@ const LoginPage = () => {
                 bgcolor: 'var(--accent-700)',
                 transform: 'translateY(-1px)',
                 boxShadow: 'var(--shadow-md)'
+              },
+              '&:disabled': {
+                bgcolor: 'var(--gray-400)',
+                transform: 'none'
               }
             }}
           >
-            Giriş Yap
+            {loading ? 'Giriş Yapılıyor...' : 'Giriş Yap'}
           </Button>
         </Box>
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { ILink } from '../interfaces';
+import type { CreateLinkData } from '../interfaces';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
@@ -14,28 +14,34 @@ import TagIcon from '@mui/icons-material/Tag';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 interface AddLinkFormProps {
-  onAddLink: (link: ILink) => void;
+  onAddLink: (link: CreateLinkData) => void;
 }
 
 const AddLinkForm = (props: AddLinkFormProps) => {
-  const [formData, setFormData] = useState<Omit<ILink, 'id'>>({
+  const [formData, setFormData] = useState<CreateLinkData>({
     url: '',
     title: '',
     description: '',
-    tags: ''
+    tags: []
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    if (name === 'tags') {
+      // Tag'leri virgülle ayır
+      const tagArray = value.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
+      setFormData(prev => ({ ...prev, tags: tagArray }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (props.onAddLink) {
-      props.onAddLink({ ...formData, id: Date.now() });
+      props.onAddLink(formData);
     }
-    setFormData({ url: '', title: '', description: '', tags: '' });
+    setFormData({ url: '', title: '', description: '', tags: [] });
   }
 
   return (
@@ -202,12 +208,12 @@ const AddLinkForm = (props: AddLinkFormProps) => {
                 )
               }}
             />
-            
+
             <TextField
               label="Etiketler (virgülle ayırın)"
               variant="outlined"
               name="tags"
-              value={formData.tags}
+              value={formData.tags?.join(', ') || ''}
               onChange={handleChange}
               sx={{
                 '& .MuiOutlinedInput-root': {

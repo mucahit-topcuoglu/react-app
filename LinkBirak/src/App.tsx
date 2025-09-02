@@ -2,6 +2,7 @@
 import './App.css';
 import LoginPage from './pages/LoginPage';
 import { Routes, Route } from 'react-router-dom';
+import { UserProvider } from './contexts/UserContext';
 
 import HomePage from './pages/HomePage';
 import RegisterPage from './pages/RegisterPage';
@@ -12,15 +13,17 @@ import LinksPage from './pages/LinksPage';
 
 function App() {
   return (
-    <Routes>
-      <Route path="/home" element={<HomePage />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route path="/profile" element={<ProfilePage />} />
-      <Route path="/about" element={<AboutPage />} />
-      <Route path="/contact" element={<ContactPage />} />
-      <Route path="/links" element={<LinksPage />} />
-      <Route path="/" element={<LoginPage />} />
-    </Routes>
+    <UserProvider>
+      <Routes>
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/links" element={<LinksPage />} />
+        <Route path="/" element={<LoginPage />} />
+      </Routes>
+    </UserProvider>
   );
 }
 

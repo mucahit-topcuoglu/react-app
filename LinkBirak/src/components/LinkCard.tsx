@@ -11,12 +11,56 @@ import DeleteIcon from '@mui/icons-material/Delete';
 interface LinkCardProps {
   link: ILink;
   onDeleteLink: (id: string | number) => void;
+  onTagSelect?: (tag: string) => void;
 }
 
-function LinkCard({ link, onDeleteLink }: LinkCardProps) {
+function LinkCard({ link, onDeleteLink, onTagSelect }: LinkCardProps) {
   if (!link) {
     return null;
   }
+
+  // Tag'leri güvenli bir şekilde işle
+  const renderTags = () => {
+    if (!link.tags || link.tags.length === 0) {
+      return (
+        <Chip 
+          label="Etiket" 
+          size="small" 
+          sx={{ 
+            background: 'var(--accent-50)',
+            color: 'var(--accent-700)',
+            borderRadius: 'var(--radius-full)',
+            border: '1px solid var(--accent-200)'
+          }} 
+        />
+      );
+    }
+
+    return link.tags.map((tag, i) => {
+      const tagName = typeof tag === 'string' ? tag : tag.name || 'Etiket';
+      return (
+        <Chip 
+          key={i} 
+          label={tagName} 
+          size="small" 
+          onClick={() => onTagSelect?.(tagName)}
+          sx={{ 
+            background: 'var(--accent-50)',
+            color: 'var(--accent-700)',
+            fontWeight: 500,
+            borderRadius: 'var(--radius-full)',
+            border: '1px solid var(--accent-200)',
+            transition: 'all var(--transition-fast)',
+            cursor: 'pointer',
+            '&:hover': {
+              background: 'var(--accent-100)',
+              transform: 'scale(1.02)'
+            }
+          }} 
+        />
+      );
+    });
+  };
   
   return (
     <Card 
@@ -69,37 +113,7 @@ function LinkCard({ link, onDeleteLink }: LinkCardProps) {
           gap: 'var(--spacing-2)', 
           marginTop: 'auto' 
         }}>
-          {link.tags
-            ? link.tags.split(',').map((tag, i) => (
-                <Chip 
-                  key={i} 
-                  label={tag.trim()} 
-                  size="small" 
-                  sx={{ 
-                    background: 'var(--accent-50)',
-                    color: 'var(--accent-700)',
-                    fontWeight: 500,
-                    borderRadius: 'var(--radius-full)',
-                    border: '1px solid var(--accent-200)',
-                    transition: 'all var(--transition-fast)',
-                    '&:hover': {
-                      background: 'var(--accent-100)',
-                      transform: 'scale(1.02)'
-                    }
-                  }} 
-                />
-              ))
-            : <Chip 
-                label="Etiket" 
-                size="small" 
-                sx={{ 
-                  background: 'var(--accent-50)',
-                  color: 'var(--accent-700)',
-                  borderRadius: 'var(--radius-full)',
-                  border: '1px solid var(--accent-200)'
-                }} 
-              />
-          }
+          {renderTags()}
         </div>
       </CardContent>
       

@@ -3,7 +3,12 @@ import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 
-const SearchBar = () => {
+interface SearchBarProps {
+  value: string;
+  onSearchChange: (value: string) => void;
+}
+
+const SearchBar = ({ value, onSearchChange }: SearchBarProps) => {
   return (
     <Box
       className="search-bar fade-in"
@@ -22,6 +27,8 @@ const SearchBar = () => {
         placeholder="Linklerde ara... (başlık veya açıklama)"
         variant="outlined"
         fullWidth
+        value={value}
+        onChange={(e) => onSearchChange(e.target.value)}
         sx={{
           '& .MuiOutlinedInput-root': {
             background: '#ffffff',

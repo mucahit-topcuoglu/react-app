@@ -6,6 +6,7 @@ import type { ILink } from '../interfaces';
 interface LinkListProps {
   links: ILink[];
   onDeleteLink: (id: string | number) => void;
+  onTagSelect?: (tag: string) => void;
 }
 
 function LinkList(props: LinkListProps) {
@@ -44,7 +45,11 @@ function LinkList(props: LinkListProps) {
     >
       {props.links.slice(0, 9).map((link, idx) => (
         <Box key={link?.id || idx}>
-          <LinkCard link={link} onDeleteLink={props.onDeleteLink} />
+          <LinkCard 
+            link={link} 
+            onDeleteLink={props.onDeleteLink} 
+            onTagSelect={props.onTagSelect}
+          />
         </Box>
       ))}
     </Box>

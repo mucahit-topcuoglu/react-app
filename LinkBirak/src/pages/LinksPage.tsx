@@ -1,24 +1,73 @@
-import React from 'react';
-import { Typography, Box, Card, CardContent, Avatar, Chip } from '@mui/material';
-import LinkIcon from '@mui/icons-material/Link';
-import SearchIcon from '@mui/icons-material/Search';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import React, { useState, useEffect } from 'react';
+import { 
+  Typography, 
+  Box, 
+  Container, 
+  Card, 
+  Avatar, 
+  Chip,
+  Alert,
+  Snackbar
+} from '@mui/material';
 import Header from '../components/Header';
 import SearchBar from '../components/SearchBar';
 import LinkList from '../components/LinkList';
 import Footer from '../components/Footer';
+import { LinkService } from '../services/linkService';
 import type { ILink } from '../interfaces';
 
-const mockLinks: ILink[] = [
-  { id: 1, title: 'Material-UI', url: 'https://mui.com', description: 'React UI framework', tags: 'ui,design,react' },
-  { id: 2, title: 'React Documentation', url: 'https://react.dev', description: 'Official React docs', tags: 'react,docs' },
-  { id: 3, title: 'Vite', url: 'https://vitejs.dev', description: 'Next generation frontend tooling', tags: 'vite,build' },
-  { id: 4, title: 'TypeScript', url: 'https://typescriptlang.org', description: 'JavaScript with syntax for types', tags: 'typescript,js' },
-  { id: 5, title: 'GitHub', url: 'https://github.com', description: 'Where the world builds software', tags: 'git,code' },
-  { id: 6, title: 'Stack Overflow', url: 'https://stackoverflow.com', description: 'Developer community', tags: 'community,help' }
-];
+// İkonlar
+import LinkIcon from '@mui/icons-material/Link';
+import SearchIcon from '@mui/icons-material/Search';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 
 const LinksPage = () => {
+  const [links, setLinks] = useState<ILink[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    loadLinks();
+  }, []);
+
+  const loadLinks = async () => {
+    try {
+      setLoading(true);
+      const fetchedLinks = await LinkService.getLinks();
+      setLinks(fetchedLinks);
+    } catch (err) {
+      setError('Linkler yüklenirken bir hata oluştu');
+      console.error('Error loading links:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+  };
+
+  const handleTagSelect = (tag: string) => {
+    setSelectedTag(selectedTag === tag ? null : tag);
+  };
+
+  // Filtreleme: Önce etiket filtresi, sonra arama filtresi
+  const filteredLinks = links
+    .filter(link => {
+      // Etiket filtresi - şimdilik kaldırıldı
+      return true;
+    })
+    .filter(link => {
+      // Arama filtresi
+      if (searchTerm) {
+        return link.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+               link.description.toLowerCase().includes(searchTerm.toLowerCase());
+      }
+      return true;
+    });
+
   return (
     <>
       <Header />
@@ -29,27 +78,25 @@ const LinksPage = () => {
         pt: '90px',
         px: { xs: 2, md: 4 }
       }}>
-        <Box sx={{ 
-          maxWidth: '1200px',
-          mx: 'auto',
-          p: { xs: 2, md: 4 }
-        }}>
-          <Box sx={{ textAlign: 'center', mb: 6 }} className="fade-in">
-            <Typography variant="h3" sx={{ 
-              fontWeight: 600, 
-              mb: 2,
-              color: 'var(--accent-700)'
+        <Container maxWidth="lg" sx={{ py: 4 }}>
+          {/* Başlık */}
+          <Box sx={{ 
+            textAlign: 'center', 
+            mb: 6 
+          }} className="slide-up">
+            <Typography variant="h2" sx={{ 
+              fontWeight: 700, 
+              color: 'var(--gray-900)',
+              mb: 2
             }}>
               Tüm Linkler
             </Typography>
             <Typography variant="h6" sx={{ 
-              color: 'var(--gray-600)', 
-              fontWeight: 400, 
-              mb: 4,
-              maxWidth: '600px',
+              color: 'var(--gray-600)',
+              maxWidth: 600,
               mx: 'auto'
             }}>
-              Bağlantılarınızı Keşfedin ve Yönetin
+              Kullanıcıların paylaştığı değerli linkleri keşfedin ve kendi koleksiyonunuzu oluşturun.
             </Typography>
           </Box>
 
@@ -57,9 +104,9 @@ const LinksPage = () => {
           <Box sx={{ 
             display: 'grid', 
             gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
-            gap: 3,
+            gap: 3, 
             mb: 6 
-          }} className="fade-in">
+          }} className="slide-up">
             <Card sx={{ 
               p: 4,
               textAlign: 'center',
@@ -79,7 +126,7 @@ const LinksPage = () => {
                 mx: 'auto', 
                 mb: 3,
                 bgcolor: 'var(--accent-100)',
-                color: 'var(--accent-700)'
+                color: 'var(--accent-600)'
               }}>
                 <LinkIcon />
               </Avatar>
@@ -88,7 +135,7 @@ const LinksPage = () => {
                 color: 'var(--accent-600)',
                 mb: 1
               }}>
-                {mockLinks.length}
+                {links.length}
               </Typography>
               <Typography variant="body2" sx={{ 
                 color: 'var(--gray-600)',
@@ -125,7 +172,7 @@ const LinksPage = () => {
                 color: 'var(--success-600)',
                 mb: 1
               }}>
-                12
+                0
               </Typography>
               <Typography variant="body2" sx={{ 
                 color: 'var(--gray-600)',
@@ -162,7 +209,7 @@ const LinksPage = () => {
                 color: 'var(--warning-600)',
                 mb: 1
               }}>
-                89%
+                {links.length > 0 ? '100%' : '0%'}
               </Typography>
               <Typography variant="body2" sx={{ 
                 color: 'var(--gray-600)',
@@ -175,80 +222,44 @@ const LinksPage = () => {
 
           {/* Arama ve Link Listesi */}
           <Box sx={{ mb: 6 }} className="slide-up">
-            <SearchBar />
+            <SearchBar 
+              value={searchTerm}
+              onSearchChange={handleSearchChange}
+            />
           </Box>
 
-          {/* Popüler Kategoriler */}
-          <Box sx={{ mb: 6 }} className="fade-in">
-            <Typography variant="h5" sx={{ 
-              fontWeight: 600, 
-              mb: 3, 
-              color: 'var(--gray-900)' 
-            }}>
-              Popüler Kategoriler
-            </Typography>
+          {/* Link Listesi */}
+          {loading ? (
             <Box sx={{ 
               display: 'flex', 
-              gap: 2, 
-              flexWrap: 'wrap' 
+              justifyContent: 'center', 
+              alignItems: 'center', 
+              minHeight: '200px' 
             }}>
-              <Chip 
-                label="React" 
-                sx={{ 
-                  bgcolor: 'var(--accent-50)',
-                  color: 'var(--accent-700)',
-                  border: '1px solid var(--accent-200)',
-                  fontWeight: 500
-                }} 
-                size="medium" 
-              />
-              <Chip 
-                label="UI/UX" 
-                sx={{ 
-                  bgcolor: 'var(--success-50)',
-                  color: 'var(--success-600)',
-                  border: '1px solid var(--success-200)',
-                  fontWeight: 500
-                }} 
-                size="medium" 
-              />
-              <Chip 
-                label="Development" 
-                sx={{ 
-                  bgcolor: 'var(--warning-50)',
-                  color: 'var(--warning-600)',
-                  border: '1px solid var(--warning-200)',
-                  fontWeight: 500
-                }} 
-                size="medium" 
-              />
-              <Chip 
-                label="Tools" 
-                sx={{ 
-                  bgcolor: 'var(--accent-50)',
-                  color: 'var(--accent-700)',
-                  border: '1px solid var(--accent-200)',
-                  fontWeight: 500
-                }} 
-                size="medium" 
-              />
-              <Chip 
-                label="Documentation" 
-                sx={{ 
-                  bgcolor: 'var(--gray-50)',
-                  color: 'var(--gray-700)',
-                  border: '1px solid var(--gray-200)',
-                  fontWeight: 500
-                }} 
-                size="medium" 
-              />
+              <Typography>Yükleniyor...</Typography>
             </Box>
-          </Box>
-
-          <LinkList links={mockLinks} onDeleteLink={() => {}} />
-        </Box>
+          ) : (
+            <LinkList 
+              links={filteredLinks} 
+              onDeleteLink={() => {}}
+              onTagSelect={() => {}}
+            />
+          )}
+        </Container>
       </Box>
       <Footer />
+
+      {/* Error Snackbar */}
+      <Snackbar 
+        open={!!error} 
+        autoHideDuration={6000} 
+        onClose={() => setError(null)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setError(null)} severity="error" sx={{ width: '100%' }}>
+          {error}
+        </Alert>
+      </Snackbar>
     </>
   );
 };
