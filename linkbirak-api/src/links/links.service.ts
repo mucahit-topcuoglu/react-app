@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Link } from './link.entity';
-import { Tag } from '../tags/tag.entity';
-import { CreateLinkDto } from './dto/create-link.dto';
+﻿import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Link } from "./link.entity";
+import { Tag } from "../tags/tag.entity";
+import { CreateLinkDto } from "./dto/create-link.dto";
+import { UpdateLinkDto } from "./dto/update-link.dto";
 
 @Injectable()
 export class LinksService {
@@ -17,26 +18,22 @@ export class LinksService {
   async create(createLinkDto: CreateLinkDto, userId: number): Promise<Link> {
     const { tags, ...linkData } = createLinkDto;
     
-    // Önce link'i oluştur
     const link = this.linksRepository.create({
       ...linkData,
       userId,
     });
     
-    console.log('Creating link in database:', link);
+    console.log("Creating link in database:", link);
     
-    // Link'i kaydet
     const savedLink = await this.linksRepository.save(link);
-    console.log('Link saved to database successfully:', savedLink);
+    console.log("Link saved to database successfully:", savedLink);
     
-    // Tag'leri işle ve link'e ekle
     if (tags && tags.length > 0) {
       const tagEntities = await this.processTags(tags);
       
-      // Link'i tag'lerle birlikte güncelle
       savedLink.tags = tagEntities;
       const updatedLink = await this.linksRepository.save(savedLink);
-      console.log('Link updated with tags:', updatedLink);
+      console.log("Link updated with tags:", updatedLink);
       
       return updatedLink;
     }
@@ -45,36 +42,73 @@ export class LinksService {
   }
 
   async findAll(userId: number): Promise<Link[]> {
-    console.log('Fetching links from database for userId:', userId);
+    console.log("Fetching links from database for userId:", userId);
     
     const links = await this.linksRepository.find({
       where: { userId: userId },
-      relations: ['tags'],
-      order: { createdAt: 'DESC' },
+      relations: ["tags"],
+      order: { createdAt: "DESC" },
     });
     
-    console.log('Links fetched from database:', links);
+    console.log("Links fetched from database:", links);
     return links;
   }
 
-  // Link silme metodu
-  async delete(id: number, userId: number): Promise<void> {
-    console.log('Deleting link with id:', id, 'for userId:', userId);
+  async findOne(id: number, userId: number): Promise<Link> {
+    console.log("Finding link with id:", id, "for userId:", userId);
     
-    // Link'i bul ve kullanıcıya ait olduğunu kontrol et
+    const link = await this.linksRepository.findOne({
+      where: { id, userId },
+      relations: ["tags"],
+    });
+    
+    if (!link) {
+      throw new NotFoundException("Link bulunamadı");
+    }
+    
+    return link;
+  }
+
+  async update(id: number, updateLinkDto: UpdateLinkDto, userId: number): Promise<Link> {
+    console.log("Updating link with id:", id, "for userId:", userId);
+    
+    const link = await this.linksRepository.findOne({
+      where: { id, userId },
+      relations: ["tags"],
+    });
+    
+    if (!link) {
+      throw new NotFoundException("Link bulunamadı veya bu kullanıcıya ait değil");
+    }
+    
+    // Link bilgilerini güncelle
+    if (updateLinkDto.url) link.url = updateLinkDto.url;
+    if (updateLinkDto.title) link.title = updateLinkDto.title;
+    if (updateLinkDto.description) link.description = updateLinkDto.description;
+    
+    // Tag'leri güncelle
+    if (updateLinkDto.tags !== undefined) {
+      const tagEntities = await this.processTags(updateLinkDto.tags);
+      link.tags = tagEntities;
+    }
+    
+    const updatedLink = await this.linksRepository.save(link);
+    console.log("Link updated successfully:", updatedLink);
+    
+    return updatedLink;
+  }
+
+  async delete(id: number, userId: number): Promise<void> {
     const link = await this.linksRepository.findOneBy({
       id: id,
       userId: userId
     });
     
     if (!link) {
-      console.log('Link not found or not owned by user');
-      throw new NotFoundException('Link bulunamadı veya bu kullanıcıya ait değil');
+      throw new NotFoundException("Link bulunamadı");
     }
-    
-    // Link'i sil
     await this.linksRepository.remove(link);
-    console.log('Link deleted successfully:', id);
+    console.log("Link Silindi:", id);
   }
 
   private async processTags(tagNames: string[]): Promise<Tag[]> {
@@ -83,7 +117,6 @@ export class LinksService {
     for (const tagName of tagNames) {
       const trimmedName = tagName.trim();
       if (trimmedName) {
-        // Tag var mı kontrol et, yoksa oluştur
         let tag = await this.tagsRepository.findOneBy({
           name: trimmedName
         });

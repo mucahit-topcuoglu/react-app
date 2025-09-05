@@ -33,7 +33,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Sayfa yüklendiğinde localStorage'dan kullanıcı bilgilerini al
     const storedUser = localStorage.getItem('user');
     const storedLoginStatus = localStorage.getItem('isLoggedIn');
     

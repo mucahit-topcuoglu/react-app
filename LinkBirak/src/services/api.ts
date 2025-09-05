@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3000';
+﻿const API_BASE_URL = "http://localhost:3000";
 
 export interface ApiResponse<T> {
   data: T;
@@ -14,9 +14,9 @@ export class ApiService {
 
   static async get<T>(endpoint: string): Promise<T> {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...this.getAuthHeaders(),
       },
     });
@@ -30,9 +30,9 @@ export class ApiService {
 
   static async post<T>(endpoint: string, data: any): Promise<T> {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...this.getAuthHeaders(),
       },
       body: JSON.stringify(data),
@@ -47,8 +47,29 @@ export class ApiService {
 
   static async put<T>(endpoint: string, data: any): Promise<T> {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: 'PUT',
-      headers: this.getAuthHeaders(),
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        ...this.getAuthHeaders(),
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return response.json();
+  }
+
+  // PATCH metodu ekliyoruz
+  static async patch<T>(endpoint: string, data: any): Promise<T> {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        ...this.getAuthHeaders(),
+      },
       body: JSON.stringify(data),
     });
 
@@ -62,9 +83,9 @@ export class ApiService {
   // DELETE metodu ekliyoruz
   static async delete(endpoint: string): Promise<void> {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...this.getAuthHeaders(),
       },
     });
@@ -73,4 +94,6 @@ export class ApiService {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
   }
-} 
+}
+
+export default ApiService;

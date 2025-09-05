@@ -1,29 +1,29 @@
-import { Controller, Get, Post, Delete, Body, Param, Request, HttpException, HttpStatus } from '@nestjs/common';
-import { LinksService } from './links.service';
-import { CreateLinkDto } from './dto/create-link.dto';
+﻿import { Controller, Get, Post, Delete, Patch, Body, Param, Request, HttpException, HttpStatus } from "@nestjs/common";
+import { LinksService } from "./links.service";
+import { CreateLinkDto } from "./dto/create-link.dto";
+import { UpdateLinkDto } from "./dto/update-link.dto";
 
-@Controller('links')
+@Controller("links")
 export class LinksController {
   constructor(private readonly linksService: LinksService) {}
 
-  @Get('test')
+  @Get("test")
   async test() {
-    return { message: 'Links endpoint çalışıyor!' };
+    return { message: "Links endpoint çalışıyor!" };
   }
 
   @Post()
   async create(@Body() createLinkDto: CreateLinkDto) {
     try {
-      console.log('Received link data:', createLinkDto);
+      console.log("Received link data:", createLinkDto);
       
-      // Geçici olarak userId 1 kullanıyoruz
       const result = await this.linksService.create(createLinkDto, 1);
-      console.log('Link created successfully:', result);
+      console.log("Link created successfully:", result);
       
       return result;
     } catch (error) {
-      console.error('Error creating link:', error);
-      console.error('Error stack:', error.stack);
+      console.error("Error creating link:", error);
+      console.error("Error stack:", error.stack);
       
       throw new HttpException(
         `Link oluşturulurken hata: ${error.message}`,
@@ -35,16 +35,15 @@ export class LinksController {
   @Get()
   async findAll() {
     try {
-      console.log('Fetching links for userId: 1');
+      console.log("Fetching links for userId: 1");
       
-      // Geçici olarak userId 1 kullanıyoruz
       const result = await this.linksService.findAll(1);
-      console.log('Links fetched successfully:', result);
+      console.log("Links fetched successfully:", result);
       
       return result;
     } catch (error) {
-      console.error('Error fetching links:', error);
-      console.error('Error stack:', error.stack);
+      console.error("Error fetching links:", error);
+      console.error("Error stack:", error.stack);
       
       throw new HttpException(
         `Linkler getirilirken hata: ${error.message}`,
@@ -53,21 +52,56 @@ export class LinksController {
     }
   }
 
-  // Link silme endpoint'i
-  @Delete(':id')
-  async delete(@Param('id') id: string) {
+  @Get(":id")
+  async findOne(@Param("id") id: string) {
     try {
-      console.log('Deleting link with id:', id);
+      console.log("Fetching link with id:", id);
       
-      // Geçici olarak userId 1 kullanıyoruz
-      await this.linksService.delete(parseInt(id), 1);
-      console.log('Link deleted successfully');
+      const result = await this.linksService.findOne(parseInt(id), 1);
+      console.log("Link fetched successfully:", result);
       
-      return { message: 'Link başarıyla silindi' };
+      return result;
     } catch (error) {
-      console.error('Error deleting link:', error);
-      console.error('Error stack:', error.stack);
+      console.error("Error fetching link:", error);
+      console.error("Error stack:", error.stack);
       
+      throw new HttpException(
+        `Link getirilirken hata: ${error.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  @Patch(":id")
+  async update(@Param("id") id: string, @Body() updateLinkDto: UpdateLinkDto) {
+    try {
+      console.log("Updating link with id:", id);
+      console.log("Update data:", updateLinkDto);
+      
+      const result = await this.linksService.update(parseInt(id), updateLinkDto, 1);
+      console.log("Link updated successfully:", result);
+      
+      return result;
+    } catch (error) {
+      console.error("Error updating link:", error);
+      console.error("Error stack:", error.stack);
+      
+      throw new HttpException(
+        `Link güncellenirken hata: ${error.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  @Delete(":id")
+  async delete(@Param("id") id: string) {
+    try {
+      await this.linksService.delete(parseInt(id), 1);
+      console.log("Link silindi");
+      
+      return { message: "Link başarıyla silindi" };
+    } catch (error) {
+      console.error("link silinemedi:", error);
       throw new HttpException(
         `Link silinirken hata: ${error.message}`,
         HttpStatus.INTERNAL_SERVER_ERROR
